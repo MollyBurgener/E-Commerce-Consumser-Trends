@@ -1,0 +1,23 @@
+> install.packages("tidyverse")
+> # Filtering out rows where Gender is "NANA"
+> cleaned_data <- Online_Shopping_Data %>%
++    filter(Gender != "NANA")
+> 
+> # Gender distribution bar plot
+> ggplot(cleaned_data, aes(x = Gender)) +
++    geom_bar(fill = "skyblue", color = "black") +
++    labs(title = "Gender Distribution of Online Shoppers", x = "Gender", y = "Count") +
++    theme_minimal()
+> # Filtering out rows where Gender is "NANA", "Other", or NA in Preferred_Marketplace
+> cleaned_data <- Online_Shopping_Data %>%
++    filter(Gender != "NANA", Gender != "Other", !is.na(Preferred_Marketplace))
+> 
+> # Creating a bar plot for Gender and Preferred Marketplace
+> ggplot(cleaned_data, aes(x = Gender, fill = Preferred_Marketplace)) +
++    geom_bar(position = "fill") +  # "fill" makes it a stacked bar chart with percentages
++    labs(title = "Gender vs Preferred Marketplace", 
++         x = "Gender", 
++         y = "Proportion", 
++         fill = "Preferred Marketplace") +
++    theme_minimal() +
++    scale_y_continuous(labels = scales::percent)  # Show percentages on y-axis
