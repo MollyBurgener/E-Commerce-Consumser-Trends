@@ -1,0 +1,25 @@
+> # Checking the unique values in the columns
+> unique(Online_Shopping_Data$Gender)
+[1] "Male"            "Female"          "12/3/2023 21:50" "Other"          
+> unique(Online_Shopping_Data$Online_Shopping_Freq)
+[1] "Rarely or Never"         "Once in a month"        
+[3] "Once in a week"          "Multiple times per week"
+[5] "12/4/2023 21:50" # These highlighted date values don't belong under “Gender” and “Online_Shopping_Freq” columns       
+> # Changing incorrect values to NA
+> library(dplyr)
+> library(stringr)
+> Online_Shopping_Data <- Online_Shopping_Data %>%
++    mutate(Gender = ifelse(str_trim(Gender) == "12/3/2023 21:50", NA, Gender),
+> > Online_Shopping_Data <- Online_Shopping_Data %>% mutate(Online_Shopping_Freq = ifelse(str_trim(Online_Shopping_Freq) == "12/4/2023 21:50", NA, Online_Shopping_Freq))
+Online_Shopping_Data$Gender <- trimws(Online_Shopping_Data$Gender)
+> # Removing leading and trailing white spaces
+> Online_Shopping_Data[] <- lapply(Online_Shopping_Data, function(x) {
++    if (is.character(x)) trimws(x) else x
++ })
+> # Apply function to capitalize the first letter of each string in character columns
+> Online_Shopping_Data[] <- lapply(Online_Shopping_Data, function(x) {
++    if (is.character(x)) {
++        # Capitalize first letter of each value, keep the rest in lower case
++        return(sapply(x, function(val) paste0(toupper(substr(val, 1, 1)), tolower(substr(val, 2, nchar(val))))))
++    } else {
++        return(x)
