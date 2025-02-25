@@ -1,4 +1,5 @@
 # View Summary of data table
 > summary(Online_Shopping_Data)# See summary data below 
+
 # View frequency counts for each column
 > lapply(Online_Shopping_Data, function(x) table(x))
