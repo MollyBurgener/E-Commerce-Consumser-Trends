@@ -2,7 +2,7 @@
 > # Filtering out rows where Gender is "NANA"
 > cleaned_data <- Online_Shopping_Data %>%
 +    filter(Gender != "NANA")
-> 
+
 > # Gender distribution bar plot
 > ggplot(cleaned_data, aes(x = Gender)) +
 +    geom_bar(fill = "skyblue", color = "black") +
@@ -11,7 +11,7 @@
 > # Filtering out rows where Gender is "NANA", "Other", or NA in Preferred_Marketplace
 > cleaned_data <- Online_Shopping_Data %>%
 +    filter(Gender != "NANA", Gender != "Other", !is.na(Preferred_Marketplace))
-> 
+
 > # Creating a bar plot for Gender and Preferred Marketplace
 > ggplot(cleaned_data, aes(x = Gender, fill = Preferred_Marketplace)) +
 +    geom_bar(position = "fill") +  # "fill" makes it a stacked bar chart with percentages
@@ -21,3 +21,91 @@
 +         fill = "Preferred Marketplace") +
 +    theme_minimal() +
 +    scale_y_continuous(labels = scales::percent)  # Show percentages on y-axis
+# View the grouped data to see the frequency distribution
+> print(shopping_by_gender)
+
+# Filter out rows where Gender is "NANA" or "Other"
+> shopping_by_gender_clean <- shopping_by_gender %>%
++    filter(Gender != "NANA", Gender != "Other")
+> 
+> # View the cleaned data
+> print(shopping_by_gender_clean)
+
+# A tibble: 8 × 3
+  Gender Online_Shopping_Freq    count
+  <chr>  <chr>                   <int>
+1 Female Multiple times per week     9
+2 Female Once in a month            69
+3 Female Once in a week             11
+4 Female Rarely or never            36
+5 Male   Multiple times per week     2
+6 Male   Once in a month            30
+7 Male   Once in a week              7
+8 Male   Rarely or never            35
+
+# Create a bar plot showing shopping frequency by gender
+> ggplot(shopping_by_gender_clean, aes(x = Gender, y = count, fill = Online_Shopping_Freq)) +
++    geom_bar(stat = "identity", position = "dodge") +  # 'dodge' places bars side by side
++    labs(title = "Online Shopping Frequency by Gender", 
++         x = "Gender", 
++         y = "Count of Respondents", 
++         fill = "Shopping Frequency") +
++    theme_minimal()
+
+
+> # Group by Gender and Frequent Products to get counts
+> products_by_gender <- Online_Shopping_Data %>%
++    filter(Gender != "NANA", Gender != "Other") %>%
++    group_by(Gender, Frequent_Products) %>%
++    summarise(count = n())
+
+> # View the grouped data
+> print(products_by_gender)
+# A tibble: 18 × 3
+# Groups:   Gender [2]
+   Gender Frequent_Products                     count
+   <chr>  <chr>                                 <int>
+ 1 Female Beauty and personal care                 20
+ 2 Female Books and media (e.g., movies, music)    13
+ 3 Female Clothing and fashion accessories         80
+ 4 Female Electronics and gadgets                   8
+ 5 Female Fridge magnets                            1
+ 6 Female Home  appliances and furniture            1
+ 7 Female Jewellery and stationery items            1
+ 8 Female Shoes                                     1
+ 9 Male   Beauty and personal care                  2
+10 Male   Books and media (e.g., movies, music)     3
+11 Male   Clothing and fashion accessories         32
+12 Male   Clothing, electronics, e-games            1
+13 Male   Electronics and gadgets                  31
+14 Male   Foods                                     1
+15 Male   Gadgets and clothing                      1
+16 Male   Home  appliances and furniture            1
+17 Male   Jo bhi dil mei ayega wahi lunga           1
+18 Male   Sports                   
+
+> # Create frequency segments
+> cleaned_data$Shopping_Segment <- case_when(
++    cleaned_data$Online_Shopping_Freq == "Multiple times per week" ~ "High Frequency",
++    cleaned_data$Online_Shopping_Freq == "Once in a week" ~ "Medium Frequency",
++    cleaned_data$Online_Shopping_Freq == "Once in a month" ~ "Medium Frequency",
++    cleaned_data$Online_Shopping_Freq == "Rarely or never" ~ "Low Frequency",
++    TRUE ~ "Unknown"
++ )
+> 
+> # View the segment counts
+> table(cleaned_data$Shopping_Segment)
+
+  High Frequency    Low Frequency 
+              11               66 
+Medium Frequency 
+             117
+
+> # Create a bar plot for the frequency segments 
+> ggplot(cleaned_data, aes(x = Shopping_Segment)) +
++    geom_bar(fill = "skyblue", color = "black") +
++    labs(title = "Customer Segmentation by Shopping Frequency", 
++         x = "Shopping Frequency", 
++         y = "Number of Customers") +
++    theme_minimal() +
++    theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels by 45 degrees
