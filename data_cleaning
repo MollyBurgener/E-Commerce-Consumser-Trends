@@ -23,3 +23,13 @@ Online_Shopping_Data$Gender <- trimws(Online_Shopping_Data$Gender)
 +        return(sapply(x, function(val) paste0(toupper(substr(val, 1, 1)), tolower(substr(val, 2, nchar(val))))))
 +    } else {
 +        return(x)
+> # Remove the specific unwanted values from the dataset
+> Online_Shopping_Data <- Online_Shopping_Data %>%
++    filter(
++        Gender != "NANA" & 
++            Frequent_Products != "Jo bhi dil mei ayega wahi lunga" & 
++            Major_Drawback != "Beats ke headphone ki jagha 'the bluetooth device is ready to pair' walay headphone de diya"
++    )
+> 
+> # Check the cleaned data
+> summary(Online_Shopping_Data)
