@@ -101,7 +101,7 @@
 Medium Frequency 
              117
 
-> # Create a bar plot for the frequency segments 
+> # Creating a bar plot for the frequency segments 
 > ggplot(cleaned_data, aes(x = Shopping_Segment)) +
 +    geom_bar(fill = "skyblue", color = "black") +
 +    labs(title = "Customer Segmentation by Shopping Frequency", 
@@ -109,3 +109,10 @@ Medium Frequency
 +         y = "Number of Customers") +
 +    theme_minimal() +
 +    theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels by 45 degrees
+
+#Creating a distribution chart showing price sensitivity by shopping frequency 
+> ggplot(cleaned_data, aes(x = Online_Shopping_Freq, fill = Price_Sensitivity)) +
++     geom_bar(position = "fill") +  # "fill" makes it a stacked proportional bar chart
++     labs(title = "Price Sensitivity Distribution by Shopping Frequency", x = "Shopping Frequency", y = "Proportion") +
++     theme_minimal()+
++ theme(axis.text.x = element_text(angle = 45, hjust = 1))
